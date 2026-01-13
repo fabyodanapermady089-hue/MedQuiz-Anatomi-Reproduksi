@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedQuiz: Anatomi Reproduksi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="start-screen">
+            <h1 class="game-title">MedQuiz: Anatomi Reproduksi</h1>
+            <p>Uji pengetahuanmu tentang anatomi tubuh dan kesehatan reproduksi perempuan.</p>
+            <div class="stats-preview">
+                <span>36 Soal Medis</span> | <span>Sistem Level</span> | <span>Sertifikat</span>
+            </div>
+            <button id="start-btn" class="main-action-btn">Mulai Permainan</button>
+        </div>
+
+        <div id="game-area" class="hide">
+            <div class="top-bar">
+                <select id="level-select">
+                    <option value="0">Level: Mudah</option>
+                    <option value="1">Level: Sedang</option>
+                    <option value="2">Level: Sulit</option>
+                </select>
+                <button id="mute-btn">🔊 Suara: On</button>
+            </div>
+
+            <div class="header-info">
+                <div id="timer-display">⏱️ <span id="time-left">15</span>s</div>
+                <div id="score-display">⭐ Skor: <span id="current-score">0</span></div>
+            </div>
+
+            <div id="quiz-content">
+                <h2 id="question">Memuat soal...</h2>
+                <div id="answer-buttons" class="btn-grid"></div>
+            </div>
+        </div>
+
+        <div id="certificate-container" class="hide">
+            <div class="certificate">
+                <div class="cert-border">
+                    <h1>SERTIFIKAT KELULUSAN</h1>
+                    <p>Diberikan kepada:</p>
+                    <h2 id="player-name">Pakar Kesehatan</h2>
+                    <p>Telah menyelesaikan kuis <strong>MedQuiz: Anatomi Reproduksi</strong> dengan skor:</p>
+                    <h3 id="final-score-cert">0</h3>
+                    <div class="cert-footer">
+                        <p>Diterbitkan pada: <span id="date-cert"></span></p>
+                        <p>Oleh: <strong>AI Education System</strong></p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="window.print()" class="print-btn">💾 Simpan / Cetak Sertifikat</button>
+            <button onclick="location.reload()" class="restart-btn">🔄 Main Lagi</button>
+        </div>
+    </div>
+
+    <audio id="sound-correct" src="https://actions.google.com/sounds/v1/cartoon/clink_clanking.ogg"></audio>
+    <audio id="sound-wrong" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg"></audio>
+    <audio id="sound-timeout" src="https://actions.google.com/sounds/v1/alarms/alarm_clock_ringing_short.ogg"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
