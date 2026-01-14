@@ -1,161 +1,188 @@
+// 1. KONFIGURASI FIREBASE (Ganti dengan kode dari Firebase Console kamu)
+const firebaseConfig = {
+    apiKey: "PASTE_API_KEY_KAMU_DI_SINI",
+    authDomain: "PROJECT_ID_KAMU.firebaseapp.com",
+    databaseURL: "https://PROJECT_ID_KAMU-default-rtdb.firebaseio.com",
+    projectId: "PROJECT_ID_KAMU",
+    storageBucket: "PROJECT_ID_KAMU.appspot.com",
+    messagingSenderId: "NOMOR_SENDER_ID",
+    appId: "APP_ID_KAMU"
+};
+
+// Inisialisasi Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// 2. BANK SOAL (7 JURUSAN)
 const questions = {
-    Mudah: [
-        { q: "Di mana janin tumbuh?", a: [{t: "Rahim", c: true}, {t: "Lambung", c: false}, {t: "Ovarium", c: false}] },
-        { q: "Hormon utama perempuan adalah...", a: [{t: "Estrogen", c: true}, {t: "Testosteron", c: false}, {t: "Insulin", c: false}] },
-        { q: "Siklus bulanan sel telur luruh disebut...", a: [{t: "Menstruasi", c: true}, {t: "Evolusi", c: false}, {t: "Ovulasi", c: false}] },
-        { q: "Sel telur diproduksi di...", a: [{t: "Ovarium", c: true}, {t: "Vagina", c: false}, {t: "Serviks", c: false}] },
-        { q: "Saluran telur disebut...", a: [{t: "Tuba Falopi", c: true}, {t: "Uretra", c: false}, {t: "Buli", c: false}] },
-        { q: "Mulut rahim disebut...", a: [{t: "Serviks", c: true}, {t: "Labia", c: false}, {t: "Klitoris", c: false}] },
-        { q: "Alat reproduksi luar disebut...", a: [{t: "Vulva", c: true}, {t: "Uterus", c: false}, {t: "Oviduk", c: false}] },
-        { q: "Sel telur matang disebut...", a: [{t: "Ovum", c: true}, {t: "Sperma", c: false}, {t: "Zigot", c: false}] },
-        { q: "Lapisan rahim terdalam adalah...", a: [{t: "Endometrium", c: true}, {t: "Miometrium", c: false}, {t: "Perimetrium", c: false}] },
-        { q: "Berapa jumlah ovarium normal?", a: [{t: "Dua", c: true}, {t: "Satu", c: false}, {t: "Empat", c: false}] },
-        { q: "Masa berakhirnya haid selamanya disebut...", a: [{t: "Menopause", c: true}, {t: "Pubertas", c: false}, {t: "Ovulasi", c: false}] },
-        { q: "Cairan pelumas alami diproduksi di...", a: [{t: "Kelenjar Bartholin", c: true}, {t: "Ginjal", c: false}, {t: "Hati", c: false}] }
-    ],
-    Sedang: [
-        { q: "Bakteri Treponema pallidum menyebabkan?", a: [{t: "Sifilis", c: true}, {t: "Gonore", c: false}, {t: "Kutil", c: false}] },
-        { q: "Penyebab utama kanker serviks adalah virus...", a: [{t: "HPV", c: true}, {t: "HIV", c: false}, {t: "H5N1", c: false}] },
-        { q: "Infeksi jamur putih dan gatal disebut...", a: [{t: "Kandidiasis", c: true}, {t: "Herpes", c: false}, {t: "Sifilis", c: false}] },
-        { q: "Penyebab kencing nanah?", a: [{t: "Gonore", c: true}, {t: "Klamidia", c: false}, {t: "Diabetes", c: false}] },
-        { q: "Siklus haid normal rata-rata berapa hari?", a: [{t: "21-35 hari", c: true}, {t: "7 hari", c: false}, {t: "60 hari", c: false}] },
-        { q: "Pelepasan sel telur dari ovarium disebut?", a: [{t: "Ovulasi", c: true}, {t: "Menstruasi", c: false}, {t: "Fertilisasi", c: false}] },
-        { q: "IMS akibat protozoa adalah...", a: [{t: "Trikomoniasis", c: true}, {t: "HIV", c: false}, {t: "Kutil", c: false}] },
-        { q: "Keputihan abnormal biasanya berwarna...", a: [{t: "Hijau/Kuning & Bau", c: true}, {t: "Bening", c: false}, {t: "Putih susu", c: false}] },
-        { q: "Bakteri Gonore menyerang bagian...", a: [{t: "Selaput lendir", c: true}, {t: "Tulang", c: false}, {t: "Rambut", c: false}] },
-        { q: "Virus HSV tipe 2 menyebabkan...", a: [{t: "Herpes Genital", c: true}, {t: "Cacar Air", c: false}, {t: "Flu", c: false}] },
-        { q: "Sifilis tahap awal ditandai dengan...", a: [{t: "Luka tanpa nyeri", c: true}, {t: "Demam tinggi", c: false}, {t: "Muntah", c: false}] },
-        { q: "Radang panggul kronis disingkat...", a: [{t: "PID", c: true}, {t: "PCOS", c: false}, {t: "HIV", c: false}] }
-    ],
-    Sulit: [
-        { q: "HIV menghancurkan sel darah putih tipe...", a: [{t: "CD4", c: true}, {t: "Trombosit", c: false}, {t: "Eritrosit", c: false}] },
-        { q: "Pemeriksaan IVA bertujuan mendeteksi...", a: [{t: "Kanker Serviks", c: true}, {t: "Kista", c: false}, {t: "Kehamilan", c: false}] },
-        { q: "Vaksin HPV sebaiknya diberikan saat...", a: [{t: "Usia Remaja", c: true}, {t: "Usia Lansia", c: false}, {t: "Saat Sakit", c: false}] },
-        { q: "Endometriosis adalah gangguan pada...", a: [{t: "Jaringan endometrium", c: true}, {t: "Otot jantung", c: false}, {t: "Paru-paru", c: false}] },
-        { q: "Hormon yang memicu lonjakan ovulasi?", a: [{t: "LH", c: true}, {t: "TSH", c: false}, {t: "Kortisol", c: false}] },
-        { q: "Sindrom ovarium polikistik disingkat...", a: [{t: "PCOS", c: true}, {t: "PMS", c: false}, {t: "PPD", c: false}] },
-        { q: "AIDS adalah kumpulan gejala akibat virus...", a: [{t: "HIV", c: true}, {t: "Hepatitis", c: false}, {t: "HPV", c: false}] },
-        { q: "Organ kecil di atas uretra yang sensitif?", a: [{t: "Klitoris", c: true}, {t: "Hymen", c: false}, {t: "Serviks", c: false}] },
-        { q: "Kanker ovarium sulit dideteksi dini karena...", a: [{t: "Gejala tidak khas", c: true}, {t: "Sangat nyeri", c: false}, {t: "Tampak luar", c: false}] },
-        { q: "Sifilis yang menyerang otak disebut...", a: [{t: "Neurosifilis", c: true}, {t: "Stroke", c: false}, {t: "Meningitis", c: false}] },
-        { q: "Kelenjar yang menjaga pH vagina adalah...", a: [{t: "Kelenjar Skene", c: true}, {t: "Kelenjar Adrenal", c: false}, {t: "Pituitari", c: false}] },
-        { q: "Pertemuan sel telur dan sperma terjadi di...", a: [{t: "Tuba Falopi", c: true}, {t: "Vagina", c: false}, {t: "Uretra", c: false}] }
-    ]
+    TKJ: { 
+        10: [{q:"Alat untuk mengetes kabel jaringan UTP adalah...", a:[{t:"LAN Tester",c:true},{t:"Tang Kombinasi",c:false},{t:"Multimeter",c:false},{t:"Obeng Plus",c:false}], p:"LAN Tester digunakan untuk mengecek koneksi urutan kabel RJ45."}] 
+    },
+    RPL: { 
+        10: [{q:"Tag HTML untuk membuat baris baru adalah...", a:[{t:"<br>",c:true},{t:"<hr>",c:false},{t:"<lb>",c:false},{t:"<p>",c:false}], p:"<br> singkatan dari break, digunakan untuk pindah baris."}] 
+    },
+    DKV: { 
+        10: [{q:"Warna primer pada monitor digital adalah...", a:[{t:"RGB",c:true},{t:"CMYK",c:false},{t:"RYB",c:false},{t:"Grayscale",c:false}], p:"RGB (Red, Green, Blue) adalah model warna untuk layar digital."}] 
+    },
+    TBSM: { 
+        10: [{q:"Komponen yang berfungsi memercikkan api adalah...", a:[{t:"Busi",c:true},{t:"Piston",c:false},{t:"Karburator",c:false},{t:"Rantai",c:false}], p:"Busi menerima tegangan tinggi untuk memicu pembakaran."}] 
+    },
+    TKRO: { 
+        10: [{q:"Alat untuk mengangkat mobil saat ganti ban...", a:[{t:"Dongkrak",c:true},{t:"Kunci Inggris",c:false},{t:"Kompresor",c:false},{t:"Tang",c:false}], p:"Dongkrak digunakan untuk mengangkat beban kendaraan."}] 
+    },
+    TPM: { 
+        10: [{q:"Alat ukur dengan ketelitian 0.02mm adalah...", a:[{t:"Jangka Sorong",c:true},{t:"Micrometer",c:false},{t:"Penggaris",c:false},{t:"Meteran",c:false}], p:"Jangka sorong (Vernier Caliper) umum digunakan di bengkel mesin."}] 
+    },
+    TITL: { 
+        10: [{q:"Satuan dari Arus Listrik adalah...", a:[{t:"Ampere",c:true},{t:"Volt",c:false},{t:"Watt",c:false},{t:"Ohm",c:false}], p:"Arus listrik diukur dalam satuan Ampere (A)."}] 
+    }
 };
 
-let levels = ["Mudah", "Sedang", "Sulit"];
-let currentLevelIndex = 0;
-let currentQuestionIndex = 0;
-let score = 0;
-let timer;
-let isMuted = false;
+// 3. VARIABEL STATE GAME
+let curJ, curK, qIdx = 0, score = 0, timer, isDuel = false, isP1 = false, roomRef;
 
-// DOM Elements
-const startScreen = document.getElementById('start-screen');
-const gameArea = document.getElementById('game-area');
-const certContainer = document.getElementById('certificate-container');
-const timerEl = document.getElementById('time-left');
-const scoreEl = document.getElementById('current-score');
-const levelSelect = document.getElementById('level-select');
-
-// Sound Control
-function playSound(id) {
-    if (isMuted) return;
-    const sound = document.getElementById(id);
-    sound.currentTime = 0;
-    sound.play().catch(() => {});
+// 4. FUNGSI NAVIGASI & UI
+function toggleGuide() { 
+    document.getElementById('guide-modal').classList.toggle('hide'); 
 }
 
-document.getElementById('mute-btn').onclick = function() {
-    isMuted = !isMuted;
-    this.innerText = isMuted ? "🔇 Off" : "🔊 On";
-};
-
-document.getElementById('start-btn').onclick = function() {
-    startScreen.classList.add('hide');
-    gameArea.classList.remove('hide');
-    score = 0;
-    scoreEl.innerText = score;
-    showQuestion();
-};
-
-levelSelect.onchange = function(e) {
-    currentLevelIndex = parseInt(e.target.value);
-    currentQuestionIndex = 0;
-    showQuestion();
-};
-
-function startTimer() {
-    let timeLeft = 15;
-    timerEl.innerText = timeLeft;
-    clearInterval(timer);
-    timer = setInterval(() => {
-        timeLeft--;
-        timerEl.innerText = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            playSound('sound-timeout');
-            selectAnswer(false);
-        }
-    }, 1000);
+function startSolo() {
+    isDuel = false;
+    curJ = document.getElementById('jurusan-select').value;
+    curK = document.getElementById('kelas-select').value;
+    if(!questions[curJ] || !questions[curJ][curK]) return alert("Soal belum tersedia untuk kelas ini!");
+    begin();
 }
 
-function showQuestion() {
-    resetState();
-    let levelName = levels[currentLevelIndex];
-    let qData = questions[levelName][currentQuestionIndex];
-    document.getElementById('question').innerText = qData.q;
+// 5. LOGIKA DUEL (FIREBASE)
+function initBattle(host) {
+    const rid = document.getElementById('room-id').value;
+    if(!rid) return alert("Masukkan Kode Room dulu!");
     
-    qData.a.forEach(ans => {
-        const btn = document.createElement('button');
-        btn.innerText = ans.t;
-        btn.onclick = () => selectAnswer(ans.c);
-        document.getElementById('answer-buttons').appendChild(btn);
+    isDuel = true;
+    isP1 = host;
+    roomRef = database.ref('rooms/' + rid);
+
+    if(host) {
+        roomRef.set({
+            status: 'wait',
+            p1S: 0,
+            p2S: 0,
+            j: document.getElementById('jurusan-select').value,
+            k: document.getElementById('kelas-select').value
+        });
+        alert("Room dibuat! Berikan kode '" + rid + "' ke temanmu.");
+    } else {
+        roomRef.update({ status: 'start' });
+    }
+
+    // Mendengarkan perubahan data di Firebase secara Real-time
+    roomRef.on('value', snap => {
+        const d = snap.val();
+        if(!d) return;
+        
+        // Update skor lawan di layar
+        document.getElementById('opp-live-score').innerText = isP1 ? d.p2S : d.p1S;
+        
+        // Mulai game jika status berubah jadi 'start'
+        if(d.status === 'start' && qIdx === 0) {
+            curJ = d.j; curK = d.k;
+            begin();
+        }
+    });
+}
+
+// 6. LOGIKA PERMAINAN
+function begin() {
+    document.getElementById('start-screen').classList.add('hide');
+    document.getElementById('game-area').classList.remove('hide');
+    if(isDuel) document.getElementById('battle-stats').classList.remove('hide');
+    showQ();
+}
+
+function showQ() {
+    const qList = questions[curJ][curK];
+    if(qIdx >= qList.length) return done();
+
+    const data = qList[qIdx];
+    document.getElementById('question-text').innerText = data.q;
+    document.getElementById('feedback-box').classList.add('hide');
+    
+    const list = document.getElementById('ans-list');
+    list.innerHTML = '';
+
+    ['A','B','C','D'].forEach((label, i) => {
+        if(data.a[i]) {
+            const btn = document.createElement('button');
+            btn.className = 'ans-btn';
+            btn.innerHTML = `<span class="label">${label}</span> ${data.a[i].t}`;
+            btn.onclick = () => checkAns(data.a[i].c, data.p);
+            list.appendChild(btn);
+        }
     });
     startTimer();
 }
 
-function selectAnswer(correct) {
+function startTimer() {
+    let t = 5;
+    const disp = document.getElementById('timer-display');
+    disp.innerText = t;
+    disp.classList.remove('blink');
     clearInterval(timer);
-    if (correct) {
-        score += 10;
-        playSound('sound-correct');
-        document.body.style.backgroundColor = "#c8e6c9";
-    } else {
-        playSound('sound-wrong');
-        document.body.style.backgroundColor = "#ffcdd2";
-    }
-    scoreEl.innerText = score;
-
-    setTimeout(() => {
-        document.body.style.backgroundColor = "#fce4ec";
-        currentQuestionIndex++;
-        let levelName = levels[currentLevelIndex];
-        
-        if (currentQuestionIndex < questions[levelName].length) {
-            showQuestion();
-        } else {
-            finishLevel();
+    
+    timer = setInterval(() => {
+        t--;
+        disp.innerText = t;
+        if(t <= 2) disp.classList.add('blink');
+        if(t <= 0) {
+            clearInterval(timer);
+            checkAns(false, "Waktu habis!");
         }
-    }, 600);
+    }, 1000);
 }
 
-function resetState() {
-    const btnContainer = document.getElementById('answer-buttons');
-    while (btnContainer.firstChild) btnContainer.removeChild(btnContainer.firstChild);
-}
-
-function finishLevel() {
-    if (score >= 100) {
-        gameArea.classList.add('hide');
-        certContainer.classList.remove('hide');
-        document.getElementById('final-score-cert').innerText = score;
-        document.getElementById('date-cert').innerText = new Date().toLocaleDateString('id-ID');
-        let name = prompt("Hebat! Masukkan namamu untuk sertifikat:");
-        document.getElementById('player-name').innerText = name || "Pakar Medis";
+function checkAns(isCorrect, info) {
+    clearInterval(timer);
+    const fb = document.getElementById('feedback-box');
+    fb.classList.remove('hide');
+    
+    if(isCorrect) {
+        score += 20;
+        fb.innerText = "BENAR! 🚀";
+        fb.className = "feedback correct";
     } else {
-        alert("Level Selesai! Skor: " + score + ". Capai 100 poin untuk mendapatkan Sertifikat!");
-        currentQuestionIndex = 0;
-        showQuestion();
+        fb.innerText = "SALAH! " + (info || "");
+        fb.className = "feedback wrong";
+    }
+    
+    document.getElementById('my-live-score').innerText = score;
+    
+    // Update skor ke Firebase jika sedang Duel
+    if(isDuel) {
+        roomRef.update(isP1 ? {p1S: score} : {p2S: score});
+    }
+
+    // Jeda sebelum soal berikutnya (Duel lebih cepat agar seru)
+    setTimeout(() => {
+        qIdx++;
+        showQ();
+    }, isDuel ? 1000 : 3000);
+}
+
+function done() {
+    document.getElementById('game-area').classList.add('hide');
+    document.getElementById('result-screen').classList.remove('hide');
+    document.getElementById('total-score').innerText = score;
+    
+    const msg = document.getElementById('motivation-text');
+    const title = document.getElementById('result-title');
+
+    if(isDuel) {
+        const oppS = parseInt(document.getElementById('opp-live-score').innerText);
+        if(score > oppS) { title.innerText = "🏆 KAMU MENANG!"; msg.innerText = "Selamat! Kamu lebih unggul hari ini."; }
+        else if(score < oppS) { title.innerText = "🏁 KAMU KALAH"; msg.innerText = "Jangan menyerah, ayo balas di ronde berikutnya!"; }
+        else { title.innerText = "🤝 HASIL SERI"; msg.innerText = "Kalian berdua sama-sama hebat!"; }
+    } else {
+        msg.innerText = score >= 80 ? "Luar biasa! Kamu menguasai materi ini." : "Ayo belajar lagi agar lebih paham!";
     }
 }
