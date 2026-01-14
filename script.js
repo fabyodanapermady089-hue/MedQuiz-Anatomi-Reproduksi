@@ -1,13 +1,11 @@
-// 1. KONFIGURASI FIREBASE (Ganti dengan kode dari Firebase Console kamu)
 const firebaseConfig = {
-    apiKey: "PASTE_API_KEY_KAMU_DI_SINI",
-    authDomain: "PROJECT_ID_KAMU.firebaseapp.com",
-    databaseURL: "https://PROJECT_ID_KAMU-default-rtdb.firebaseio.com",
-    projectId: "PROJECT_ID_KAMU",
-    storageBucket: "PROJECT_ID_KAMU.appspot.com",
-    messagingSenderId: "NOMOR_SENDER_ID",
-    appId: "APP_ID_KAMU"
-};
+    apiKey: "AIzaSyAnNcWzTU2SfIxQJT5ItweOWkp501bs1wY",
+    authDomain: "cerdas-cermat-smk.firebaseapp.com",
+    projectId: "cerdas-cermat-smk",
+    storageBucket: "cerdas-cermat-smk.firebasestorage.app",
+    messagingSenderId: "37555565101",
+    appId: "1:37555565101:web:df1820020888bf7f6abea4"
+  };
 
 // Inisialisasi Firebase
 firebase.initializeApp(firebaseConfig);
