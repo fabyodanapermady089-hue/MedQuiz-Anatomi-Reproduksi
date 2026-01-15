@@ -1,186 +1,208 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyAnNcWzTU2SfIxQJT5ItweOWkp501bs1wY",
-    authDomain: "cerdas-cermat-smk.firebaseapp.com",
-    projectId: "cerdas-cermat-smk",
-    storageBucket: "cerdas-cermat-smk.firebasestorage.app",
-    messagingSenderId: "37555565101",
-    appId: "1:37555565101:web:df1820020888bf7f6abea4"
-  };
-
-// Inisialisasi Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-// 2. BANK SOAL (7 JURUSAN)
-const questions = {
-    TKJ: { 
-        10: [{q:"Alat untuk mengetes kabel jaringan UTP adalah...", a:[{t:"LAN Tester",c:true},{t:"Tang Kombinasi",c:false},{t:"Multimeter",c:false},{t:"Obeng Plus",c:false}], p:"LAN Tester digunakan untuk mengecek koneksi urutan kabel RJ45."}] 
+// ==========================================
+// DATABASE SOAL (TKJ & RPL - 10 Soal per Kelas)
+// ==========================================
+const quizData = {
+    "tkj": {
+        "10": [
+            { q: "Alat untuk menyambung kabel UTP ke RJ-45 adalah...", a: ["Tang Crimping", "Solder", "Obeng", "Tang Potong"], c: 0 },
+            { q: "Urutan kabel T568B, kabel nomor 1 adalah warna...", a: ["Putih Hijau", "Putih Oranye", "Hijau", "Oranye"], c: 1 },
+            { q: "Otak dari sebuah komputer disebut...", a: ["RAM", "Harddisk", "CPU", "Monitor"], c: 2 },
+            { q: "Satuan kecepatan internet adalah...", a: ["Mbps", "Mhz", "Byte", "Volt"], c: 0 },
+            { q: "Perangkat input untuk mengetik adalah...", a: ["Mouse", "Keyboard", "Scanner", "Printer"], c: 1 },
+            { q: "RAM berfungsi untuk menyimpan data secara...", a: ["Permanen", "Sementara", "Terhapus", "Lama"], c: 1 },
+            { q: "Jenis memori yang datanya tidak hilang saat mati adalah...", a: ["RAM", "ROM", "VGA", "Cache"], c: 1 },
+            { q: "Sistem operasi buatan Microsoft adalah...", a: ["Linux", "macOS", "Windows", "Android"], c: 2 },
+            { q: "Alat untuk mengetes kabel LAN adalah...", a: ["LAN Tester", "Multimeter", "Splicer", "OPM"], c: 0 },
+            { q: "Singkatan dari PC adalah...", a: ["Personal Computer", "Laptop", "Server", "Mainframe"], c: 0 }
+        ],
+        "11": [
+            { q: "Perangkat penghubung dua jaringan berbeda adalah...", a: ["Switch", "Hub", "Router", "Modem"], c: 2 },
+            { q: "IP Address 192.168.1.1 termasuk dalam kelas...", a: ["Kelas A", "Kelas B", "Kelas C", "Kelas D"], c: 2 },
+            { q: "Subnet mask /24 sama dengan...", a: ["255.255.255.0", "255.255.0.0", "255.0.0.0", "255.255.255.254"], c: 0 },
+            { q: "Layanan pengubah nama domain ke IP adalah...", a: ["DHCP", "DNS", "FTP", "HTTP"], c: 1 },
+            { q: "Perangkat penyebar sinyal Wi-Fi adalah...", a: ["Antena", "Access Point", "Switch", "Server"], c: 1 },
+            { q: "Protokol transfer file adalah...", a: ["HTTP", "SMTP", "FTP", "SSH"], c: 2 },
+            { q: "Topologi jaringan berbentuk bintang disebut...", a: ["Bus", "Ring", "Star", "Mesh"], c: 2 },
+            { q: "Jumlah kabel di dalam kabel UTP adalah...", a: ["4", "6", "8", "10"], c: 2 },
+            { q: "Perangkat Layer 2 (Data Link) adalah...", a: ["Hub", "Switch", "Router", "Repeater"], c: 1 },
+            { q: "IP untuk jaringan internal disebut...", a: ["IP Public", "IP Private", "IP Static", "IP Dynamic"], c: 1 }
+        ],
+        "12": [
+            { q: "Fiber optik mengirim data menggunakan...", a: ["Listrik", "Cahaya", "Suara", "Magnet"], c: 1 },
+            { q: "Alat penyambung kabel fiber optik adalah...", a: ["Tang", "Splicer", "Stripper", "OTDR"], c: 1 },
+            { q: "OS Jaringan yang bersifat open source adalah...", a: ["Windows Server", "Linux Debian", "macOS", "Cisco IOS"], c: 1 },
+            { q: "Remote server teks yang aman menggunakan...", a: ["Telnet", "SSH", "HTTP", "FTP"], c: 1 },
+            { q: "Kepanjangan VLAN adalah...", a: ["Virtual LAN", "Video LAN", "Voice LAN", "Visual LAN"], c: 0 },
+            { q: "Alat pengukur redaman fiber optik adalah...", a: ["Multimeter", "OTDR", "Tang", "Solder"], c: 1 },
+            { q: "Pembatas akses jaringan disebut...", a: ["Antivirus", "Firewall", "Spyware", "Malware"], c: 1 },
+            { q: "Bagian terdalam fiber optik disebut...", a: ["Cladding", "Coating", "Core", "Buffer"], c: 2 },
+            { q: "Mikrotik populer untuk sekolah adalah...", a: ["RB941 (hap lite)", "Cisco", "TP-Link", "Huawei"], c: 0 },
+            { q: "Protokol penerima email adalah...", a: ["SMTP", "POP3", "HTTP", "FTP"], c: 1 }
+        ]
     },
-    RPL: { 
-        10: [{q:"Tag HTML untuk membuat baris baru adalah...", a:[{t:"<br>",c:true},{t:"<hr>",c:false},{t:"<lb>",c:false},{t:"<p>",c:false}], p:"<br> singkatan dari break, digunakan untuk pindah baris."}] 
-    },
-    DKV: { 
-        10: [{q:"Warna primer pada monitor digital adalah...", a:[{t:"RGB",c:true},{t:"CMYK",c:false},{t:"RYB",c:false},{t:"Grayscale",c:false}], p:"RGB (Red, Green, Blue) adalah model warna untuk layar digital."}] 
-    },
-    TBSM: { 
-        10: [{q:"Komponen yang berfungsi memercikkan api adalah...", a:[{t:"Busi",c:true},{t:"Piston",c:false},{t:"Karburator",c:false},{t:"Rantai",c:false}], p:"Busi menerima tegangan tinggi untuk memicu pembakaran."}] 
-    },
-    TKRO: { 
-        10: [{q:"Alat untuk mengangkat mobil saat ganti ban...", a:[{t:"Dongkrak",c:true},{t:"Kunci Inggris",c:false},{t:"Kompresor",c:false},{t:"Tang",c:false}], p:"Dongkrak digunakan untuk mengangkat beban kendaraan."}] 
-    },
-    TPM: { 
-        10: [{q:"Alat ukur dengan ketelitian 0.02mm adalah...", a:[{t:"Jangka Sorong",c:true},{t:"Micrometer",c:false},{t:"Penggaris",c:false},{t:"Meteran",c:false}], p:"Jangka sorong (Vernier Caliper) umum digunakan di bengkel mesin."}] 
-    },
-    TITL: { 
-        10: [{q:"Satuan dari Arus Listrik adalah...", a:[{t:"Ampere",c:true},{t:"Volt",c:false},{t:"Watt",c:false},{t:"Ohm",c:false}], p:"Arus listrik diukur dalam satuan Ampere (A)."}] 
+    "rpl": {
+        "10": [
+            { q: "Tag HTML untuk judul paling besar adalah...", a: ["<h6>", "<head>", "<h1>", "<title>"], c: 2 },
+            { q: "Simbol flowchart untuk 'Keputusan' adalah...", a: ["Persegi", "Jajar Genjang", "Belah Ketupat", "Oval"], c: 2 },
+            { q: "Bahasa dasar pembuat struktur web adalah...", a: ["Swift", "Java", "PHP", "HTML"], c: 3 },
+            { q: "Simbol flowchart mulai/selesai adalah...", a: ["Oval", "Persegi", "Panah", "Segitiga"], c: 0 },
+            { q: "Penyimpan banyak nilai dalam satu variabel disebut...", a: ["String", "Integer", "Array", "Boolean"], c: 2 },
+            { q: "Aplikasi pembuka website disebut...", a: ["Word", "Browser", "Excel", "Photoshop"], c: 1 },
+            { q: "Kepanjangan HTML adalah...", a: ["Hyper Tool", "Hyper Text", "High Text", "Hyper Main"], c: 1 },
+            { q: "Langkah logis penyelesaian masalah disebut...", a: ["Program", "Variabel", "Algoritma", "Flowchart"], c: 2 },
+            { q: "Tipe data untuk tulisan adalah...", a: ["Integer", "Float", "String", "Boolean"], c: 2 },
+            { q: "Editor koding populer dari Microsoft adalah...", a: ["Notepad", "Sublime", "VS Code", "Atom"], c: 2 }
+        ],
+        "11": [
+            { q: "Perintah SQL untuk mengambil data adalah...", a: ["INSERT", "UPDATE", "DELETE", "SELECT"], c: 3 },
+            { q: "Tipe data angka bulat adalah...", a: ["String", "Float", "Integer", "Boolean"], c: 2 },
+            { q: "Property CSS untuk warna teks adalah...", a: ["font-color", "color", "text-style", "bg"], c: 1 },
+            { q: "Kepanjangan PHP adalah...", a: ["Home Page", "Personal Hypertext", "Hypertext Preprocessor", "Pretty Page"], c: 2 },
+            { q: "Database pendamping PHP yang populer adalah...", a: ["Oracle", "SQL Server", "MySQL", "Access"], c: 2 },
+            { q: "Simbol ID dalam CSS adalah...", a: [".", "#", "*", "@"], c: 1 },
+            { q: "Perintah SQL menambah data adalah...", a: ["CREATE", "ADD", "INSERT", "SELECT"], c: 2 },
+            { q: "Bagian web yang dilihat user disebut...", a: ["Backend", "Frontend", "Database", "Server"], c: 1 },
+            { q: "Fungsi JS untuk pop-up pesan adalah...", a: ["print()", "alert()", "msg()", "show()"], c: 1 },
+            { q: "Tag HTML untuk link adalah...", a: ["<link>", "<href>", "<a>", "<url>"], c: 2 }
+        ],
+        "12": [
+            { q: "Arsitektur pemisah tampilan dan logika adalah...", a: ["MVC", "P2P", "Client-Server", "Monolith"], c: 0 },
+            { q: "Framework PHP dengan konsep MVC adalah...", a: ["React", "Laravel", "NodeJS", "Bootstrap"], c: 1 },
+            { q: "Tanda akhir baris di JS/PHP adalah...", a: [":", ".", ";", "!"], c: 2 },
+            { q: "Framework CSS untuk desain cepat adalah...", a: ["Laravel", "CodeIgniter", "Bootstrap", "MySQL"], c: 2 },
+            { q: "Tipe data true atau false adalah...", a: ["String", "Integer", "Boolean", "Float"], c: 2 },
+            { q: "Aplikasi pengelola database web adalah...", a: ["XAMPP", "phpMyAdmin", "Composer", "Git"], c: 1 },
+            { q: "Perintah Git mengirim perubahan ke cloud adalah...", a: ["Pull", "Commit", "Push", "Clone"], c: 2 },
+            { q: "Proses perbaikan error koding disebut...", a: ["Editing", "Running", "Debugging", "Writing"], c: 2 },
+            { q: "Bahasa pengatur gaya web adalah...", a: ["HTML", "PHP", "CSS", "SQL"], c: 2 },
+            { q: "Konsep pemrograman berorientasi objek adalah...", a: ["OOP", "Structured", "Procedural", "Functional"], c: 0 }
+        ]
     }
 };
 
-// 3. VARIABEL STATE GAME
-let curJ, curK, qIdx = 0, score = 0, timer, isDuel = false, isP1 = false, roomRef;
+// ==========================================
+// KONFIGURASI FIREBASE
+// ==========================================
+const firebaseConfig = {
+    databaseURL: "https://cerdas-cermat-smk-default-rtdb.asia-southeast1.firebasedatabase.app/"
+};
 
-// 4. FUNGSI NAVIGASI & UI
-function toggleGuide() { 
-    document.getElementById('guide-modal').classList.toggle('hide'); 
+// Inisialisasi
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 }
+const database = firebase.database();
 
-function startSolo() {
-    isDuel = false;
-    curJ = document.getElementById('jurusan-select').value;
-    curK = document.getElementById('kelas-select').value;
-    if(!questions[curJ] || !questions[curJ][curK]) return alert("Soal belum tersedia untuk kelas ini!");
-    begin();
-}
+// ==========================================
+// VARIABEL GAME & LOGIKA
+// ==========================================
+let currentQuestionIndex = 0;
+let score = 0;
+let selectedJurusan = "";
+let selectedKelas = "";
+let roomCode = "";
+let role = ""; 
 
-// 5. LOGIKA DUEL (FIREBASE)
-function initBattle(host) {
-    const rid = document.getElementById('room-id').value;
-    if(!rid) return alert("Masukkan Kode Room dulu!");
+function startQuiz(mode) {
+    selectedJurusan = document.getElementById("jurusan").value;
+    selectedKelas = document.getElementById("kelas").value;
     
-    isDuel = true;
-    isP1 = host;
-    roomRef = database.ref('rooms/' + rid);
+    if (mode === 'single') {
+        document.getElementById("menu").classList.add("hidden");
+        document.getElementById("quiz-container").classList.remove("hidden");
+        loadQuestion();
+    } else {
+        document.getElementById("menu").classList.add("hidden");
+        document.getElementById("lobby").classList.remove("hidden");
+    }
+}
 
-    if(host) {
-        roomRef.set({
-            status: 'wait',
-            p1S: 0,
-            p2S: 0,
-            j: document.getElementById('jurusan-select').value,
-            k: document.getElementById('kelas-select').value
+function createRoom() {
+    roomCode = document.getElementById("room-code").value.toUpperCase();
+    if (!roomCode) return alert("Isi kode room!");
+    
+    role = 'p1';
+    let roomRef = database.ref('rooms/' + roomCode);
+    roomRef.set({
+        jurusan: selectedJurusan,
+        kelas: selectedKelas,
+        p1: { score: 0, status: "ready" },
+        status: "waiting"
+    });
+    
+    listenToRoom(roomRef);
+}
+
+function joinRoom() {
+    roomCode = document.getElementById("room-code").value.toUpperCase();
+    if (!roomCode) return alert("Isi kode room!");
+    
+    role = 'p2';
+    let roomRef = database.ref('rooms/' + roomCode);
+    roomRef.once('value', (snapshot) => {
+        if (snapshot.exists()) {
+            roomRef.update({
+                p2: { score: 0, status: "ready" },
+                status: "playing"
+            });
+            listenToRoom(roomRef);
+        } else {
+            alert("Room tidak ditemukan!");
+        }
+    });
+}
+
+function listenToRoom(ref) {
+    ref.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data.status === "playing") {
+            selectedJurusan = data.jurusan;
+            selectedKelas = data.kelas;
+            document.getElementById("lobby").classList.add("hidden");
+            document.getElementById("quiz-container").classList.remove("hidden");
+            loadQuestion();
+        }
+    });
+}
+
+function loadQuestion() {
+    const questions = quizData[selectedJurusan][selectedKelas];
+    if (currentQuestionIndex < questions.length) {
+        const q = questions[currentQuestionIndex];
+        document.getElementById("question-text").innerText = q.q;
+        const optionsDiv = document.getElementById("options");
+        optionsDiv.innerHTML = "";
+        
+        q.a.forEach((opt, i) => {
+            const btn = document.createElement("button");
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(i);
+            optionsDiv.appendChild(btn);
         });
-        alert("Room dibuat! Berikan kode '" + rid + "' ke temanmu.");
     } else {
-        roomRef.update({ status: 'start' });
+        showResult();
     }
-
-    // Mendengarkan perubahan data di Firebase secara Real-time
-    roomRef.on('value', snap => {
-        const d = snap.val();
-        if(!d) return;
-        
-        // Update skor lawan di layar
-        document.getElementById('opp-live-score').innerText = isP1 ? d.p2S : d.p1S;
-        
-        // Mulai game jika status berubah jadi 'start'
-        if(d.status === 'start' && qIdx === 0) {
-            curJ = d.j; curK = d.k;
-            begin();
-        }
-    });
 }
 
-// 6. LOGIKA PERMAINAN
-function begin() {
-    document.getElementById('start-screen').classList.add('hide');
-    document.getElementById('game-area').classList.remove('hide');
-    if(isDuel) document.getElementById('battle-stats').classList.remove('hide');
-    showQ();
-}
-
-function showQ() {
-    const qList = questions[curJ][curK];
-    if(qIdx >= qList.length) return done();
-
-    const data = qList[qIdx];
-    document.getElementById('question-text').innerText = data.q;
-    document.getElementById('feedback-box').classList.add('hide');
-    
-    const list = document.getElementById('ans-list');
-    list.innerHTML = '';
-
-    ['A','B','C','D'].forEach((label, i) => {
-        if(data.a[i]) {
-            const btn = document.createElement('button');
-            btn.className = 'ans-btn';
-            btn.innerHTML = `<span class="label">${label}</span> ${data.a[i].t}`;
-            btn.onclick = () => checkAns(data.a[i].c, data.p);
-            list.appendChild(btn);
-        }
-    });
-    startTimer();
-}
-
-function startTimer() {
-    let t = 5;
-    const disp = document.getElementById('timer-display');
-    disp.innerText = t;
-    disp.classList.remove('blink');
-    clearInterval(timer);
-    
-    timer = setInterval(() => {
-        t--;
-        disp.innerText = t;
-        if(t <= 2) disp.classList.add('blink');
-        if(t <= 0) {
-            clearInterval(timer);
-            checkAns(false, "Waktu habis!");
-        }
-    }, 1000);
-}
-
-function checkAns(isCorrect, info) {
-    clearInterval(timer);
-    const fb = document.getElementById('feedback-box');
-    fb.classList.remove('hide');
-    
-    if(isCorrect) {
-        score += 20;
-        fb.innerText = "BENAR! 🚀";
-        fb.className = "feedback correct";
-    } else {
-        fb.innerText = "SALAH! " + (info || "");
-        fb.className = "feedback wrong";
+function checkAnswer(idx) {
+    const questions = quizData[selectedJurusan][selectedKelas];
+    if (idx === questions[currentQuestionIndex].c) {
+        score += 10;
     }
+    currentQuestionIndex++;
+    loadQuestion();
     
-    document.getElementById('my-live-score').innerText = score;
-    
-    // Update skor ke Firebase jika sedang Duel
-    if(isDuel) {
-        roomRef.update(isP1 ? {p1S: score} : {p2S: score});
+    if (roomCode) {
+        database.ref('rooms/' + roomCode + '/' + role).update({ score: score });
     }
-
-    // Jeda sebelum soal berikutnya (Duel lebih cepat agar seru)
-    setTimeout(() => {
-        qIdx++;
-        showQ();
-    }, isDuel ? 1000 : 3000);
 }
 
-function done() {
-    document.getElementById('game-area').classList.add('hide');
-    document.getElementById('result-screen').classList.remove('hide');
-    document.getElementById('total-score').innerText = score;
-    
-    const msg = document.getElementById('motivation-text');
-    const title = document.getElementById('result-title');
+function showResult() {
+    document.getElementById("quiz-container").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+    document.getElementById("final-score").innerText = score;
+}
 
-    if(isDuel) {
-        const oppS = parseInt(document.getElementById('opp-live-score').innerText);
-        if(score > oppS) { title.innerText = "🏆 KAMU MENANG!"; msg.innerText = "Selamat! Kamu lebih unggul hari ini."; }
-        else if(score < oppS) { title.innerText = "🏁 KAMU KALAH"; msg.innerText = "Jangan menyerah, ayo balas di ronde berikutnya!"; }
-        else { title.innerText = "🤝 HASIL SERI"; msg.innerText = "Kalian berdua sama-sama hebat!"; }
-    } else {
-        msg.innerText = score >= 80 ? "Luar biasa! Kamu menguasai materi ini." : "Ayo belajar lagi agar lebih paham!";
-    }
+function restart() {
+    location.reload();
 }
