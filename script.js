@@ -1,6 +1,4 @@
-// ==========================================
-// DATABASE SOAL (TKJ & RPL - 10 Soal per Kelas)
-// ==========================================
+// DATA SOAL
 const quizData = {
     "tkj": {
         "10": [
@@ -80,93 +78,59 @@ const quizData = {
     }
 };
 
-// ==========================================
-// KONFIGURASI FIREBASE
-// ==========================================
+// FIREBASE CONFIG
 const firebaseConfig = {
     databaseURL: "https://cerdas-cermat-smk-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
 
-// Inisialisasi
+// Initialize Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 const database = firebase.database();
 
-// ==========================================
-// VARIABEL GAME & LOGIKA
-// ==========================================
+// GLOBAL VARIABLES
 let currentQuestionIndex = 0;
 let score = 0;
 let selectedJurusan = "";
 let selectedKelas = "";
 let roomCode = "";
-let role = ""; 
+let role = "";
 
+// FUNCTION UNTUK MULAI
 function startQuiz(mode) {
-    selectedJurusan = document.getElementById("jurusan").value;
-    selectedKelas = document.getElementById("kelas").value;
-    
+    // Ambil elemen dropdown
+    const jurusanEl = document.getElementById("jurusan");
+    const kelasEl = document.getElementById("kelas");
+
+    if (!jurusanEl || !kelasEl) {
+        alert("Error: Elemen HTML tidak ditemukan!");
+        return;
+    }
+
+    selectedJurusan = jurusanEl.value.toLowerCase();
+    selectedKelas = kelasEl.value;
+
     if (mode === 'single') {
-        document.getElementById("menu").classList.add("hidden");
+        document.getElementById("menu").style.display = "none";
         document.getElementById("quiz-container").classList.remove("hidden");
+        document.getElementById("quiz-container").style.display = "block";
         loadQuestion();
     } else {
-        document.getElementById("menu").classList.add("hidden");
+        document.getElementById("menu").style.display = "none";
         document.getElementById("lobby").classList.remove("hidden");
+        document.getElementById("lobby").style.display = "block";
     }
-}
-
-function createRoom() {
-    roomCode = document.getElementById("room-code").value.toUpperCase();
-    if (!roomCode) return alert("Isi kode room!");
-    
-    role = 'p1';
-    let roomRef = database.ref('rooms/' + roomCode);
-    roomRef.set({
-        jurusan: selectedJurusan,
-        kelas: selectedKelas,
-        p1: { score: 0, status: "ready" },
-        status: "waiting"
-    });
-    
-    listenToRoom(roomRef);
-}
-
-function joinRoom() {
-    roomCode = document.getElementById("room-code").value.toUpperCase();
-    if (!roomCode) return alert("Isi kode room!");
-    
-    role = 'p2';
-    let roomRef = database.ref('rooms/' + roomCode);
-    roomRef.once('value', (snapshot) => {
-        if (snapshot.exists()) {
-            roomRef.update({
-                p2: { score: 0, status: "ready" },
-                status: "playing"
-            });
-            listenToRoom(roomRef);
-        } else {
-            alert("Room tidak ditemukan!");
-        }
-    });
-}
-
-function listenToRoom(ref) {
-    ref.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data.status === "playing") {
-            selectedJurusan = data.jurusan;
-            selectedKelas = data.kelas;
-            document.getElementById("lobby").classList.add("hidden");
-            document.getElementById("quiz-container").classList.remove("hidden");
-            loadQuestion();
-        }
-    });
 }
 
 function loadQuestion() {
     const questions = quizData[selectedJurusan][selectedKelas];
+    if (!questions) {
+        alert("Soal untuk jurusan ini belum tersedia!");
+        restart();
+        return;
+    }
+
     if (currentQuestionIndex < questions.length) {
         const q = questions[currentQuestionIndex];
         document.getElementById("question-text").innerText = q.q;
@@ -176,6 +140,7 @@ function loadQuestion() {
         q.a.forEach((opt, i) => {
             const btn = document.createElement("button");
             btn.innerText = opt;
+            btn.className = "option-btn";
             btn.onclick = () => checkAnswer(i);
             optionsDiv.appendChild(btn);
         });
@@ -198,11 +163,59 @@ function checkAnswer(idx) {
 }
 
 function showResult() {
-    document.getElementById("quiz-container").classList.add("hidden");
+    document.getElementById("quiz-container").style.display = "none";
     document.getElementById("result").classList.remove("hidden");
+    document.getElementById("result").style.display = "block";
     document.getElementById("final-score").innerText = score;
 }
 
 function restart() {
     location.reload();
+}
+
+// LOGIKA MULTIPLAYER (SAMA SEPERTI SEBELUMNYA)
+function createRoom() {
+    roomCode = document.getElementById("room-code").value.toUpperCase();
+    if (!roomCode) return alert("Isi kode room!");
+    role = 'p1';
+    let roomRef = database.ref('rooms/' + roomCode);
+    roomRef.set({
+        jurusan: selectedJurusan,
+        kelas: selectedKelas,
+        p1: { score: 0, status: "ready" },
+        status: "waiting"
+    });
+    listenToRoom(roomRef);
+}
+
+function joinRoom() {
+    roomCode = document.getElementById("room-code").value.toUpperCase();
+    if (!roomCode) return alert("Isi kode room!");
+    role = 'p2';
+    let roomRef = database.ref('rooms/' + roomCode);
+    roomRef.once('value', (snapshot) => {
+        if (snapshot.exists()) {
+            roomRef.update({
+                p2: { score: 0, status: "ready" },
+                status: "playing"
+            });
+            listenToRoom(roomRef);
+        } else {
+            alert("Room tidak ditemukan!");
+        }
+    });
+}
+
+function listenToRoom(ref) {
+    ref.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data.status === "playing") {
+            selectedJurusan = data.jurusan;
+            selectedKelas = data.kelas;
+            document.getElementById("lobby").style.display = "none";
+            document.getElementById("quiz-container").classList.remove("hidden");
+            document.getElementById("quiz-container").style.display = "block";
+            loadQuestion();
+        }
+    });
 }
